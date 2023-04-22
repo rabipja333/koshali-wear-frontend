@@ -6,8 +6,47 @@ import Footer from "@/components/Footer";
 
 import { Provider } from "react-redux";
 import store from "@/store/store";
+import { useEffect } from "react";
+import { useState } from "react";
+import { useRouter } from "next/router";
 
-export default function App({ Component, pageProps }) {
+
+function MyApp({ Component, pageProps }) {
+
+
+// FROM KW START
+  const [user, setUser] =useState({value: null})
+  const [key, setKey] = useState()
+  const [progress, setProgress] = useState(0)
+  const router = useRouter()
+
+
+
+  useEffect(() => {
+    // router.events.on('routeChangeStart', ()=>{
+    //   setProgress(40)
+    // })
+    // router.events.on('routeChangeComplete', ()=>{
+    //   setProgress(400)
+    // })
+ console.log("hey I am a useEffect from react")
+const token = localStorage.getItem('token')
+if(token){
+  setUser({value: token})
+  setKey(Math.random())
+}
+
+  }, [router.query])
+
+  const logout =()=>{
+    localStorage.removeItem("token")
+    setUser({value: null})
+    setKey(Math.random())
+    router.push('/')
+  }
+// FROM KW STOP
+
+
   return (
     <>
       <Head>
@@ -33,4 +72,8 @@ export default function App({ Component, pageProps }) {
       </Provider>
     </>
   );
+
+  {key && <Header logout={logout} user={user} key={key} />}
+
 }
+export default MyApp
